@@ -1,0 +1,190 @@
+/* style.css */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #fdeeee; /* Màu hồng nhạt ấm */
+    overflow: hidden; /* Ngăn scroll khi hiệu ứng bay */
+}
+
+/* --- 1. Phong bì --- */
+.envelope-container {
+    position: relative;
+    width: 300px;
+    height: 200px;
+    background: #f7a072; /* Màu vàng cam */
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    z-index: 10;
+}
+
+.envelope-body {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: #f7a072;
+    border-top: 100px solid transparent;
+    border-left: 150px solid #f9c0aa; /* Màu nhạt hơn */
+    border-right: 150px solid #f9c0aa;
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100px; /* Nửa chiều cao phong bì */
+    background: #f7a072;
+    transform-origin: bottom;
+    transition: transform 0.5s ease-in-out;
+    /* Tạo hình tam giác cho nắp */
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    z-index: 12;
+}
+
+.envelope-message {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 60px;
+    color: white;
+    z-index: 11;
+}
+.envelope-message em {
+    font-size: 0.8rem;
+}
+
+/* --- 2. Tấm thiệp --- */
+.card-container {
+    position: absolute;
+    width: 450px;
+    max-width: 90vw;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+
+    /* Ban đầu ẩn đi và ở dưới */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(200px) rotate(5deg);
+    transition: all 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    z-index: 5;
+}
+
+.card-content .teacher-img {
+    width: 100%;
+    max-width: 300px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.card-content textarea {
+    width: 100%;
+    min-height: 80px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 15px;
+    box-sizing: border-box; /* Quan trọng */
+}
+
+.card-content button {
+    background: #e74c3c; /* Màu đỏ ấm */
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-content button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+
+/* --- 3. Trạng thái "Mở" (Thêm bằng JavaScript) --- */
+
+/* Khi phong bì được "mở" */
+.envelope-container.open .envelope-flap {
+    transform: rotateX(180deg); /* Lật nắp lên */
+}
+.envelope-container.open {
+    /* Đẩy phong bì xuống và mờ đi */
+    transform: translateY(150px);
+    opacity: 0;
+    z-index: 1; /* Cho ra sau tấm thiệp */
+}
+
+/* Khi thiệp được "mở" */
+.card-container.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0) rotate(0deg); /* Bay lên và xoay về 0 */
+    z-index: 20;
+}
+
+/* --- 4. CSS Cho Hiệu ứng Bay --- */
+#effects-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none; /* Cho phép nhấn xuyên qua */
+    z-index: 999;
+}
+
+/* Định nghĩa 1 hạt (bong bóng/hoa) */
+.particle {
+    position: absolute;
+    bottom: -20px; /* Xuất phát từ dưới */
+    border-radius: 50%;
+    opacity: 0;
+    animation: fly-up 5s ease-in-out forwards;
+}
+
+/* Animation bay lên */
+@keyframes fly-up {
+    0% {
+        bottom: -20px;
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    100% {
+        bottom: 110vh; /* Bay ra khỏi màn hình */
+        opacity: 0;
+        /* Bay ngẫu nhiên sang 2 bên */
+        transform: translateX(var(--random-x, 0)) scale(0.5);
+    }
+}
+
+/* Định dạng cho lời chúc sau khi "gửi".
+  Chúng ta dùng blockquote để trông như một lời trích dẫn.
+*/
+.sent-message {
+    font-style: italic;
+    font-size: 1.1rem;
+    color: #333;
+    background: #fef9e7; /* Màu giấy vàng nhạt */
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid #f7a072; /* Màu cam ấm giống phong bì */
+    margin-top: 15px;
+    text-align: left; /* Căn lề trái cho dễ đọc */
+    white-space: pre-wrap; /* Giữ lại các lần xuống dòng của người dùng */
+}
+
+/* Thêm một lời cảm ơn nhỏ */
+.thank-you-message {
+    font-weight: bold;
+    color: #e74c3c;
+    margin-top: 20px;
+}
