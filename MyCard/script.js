@@ -1,102 +1,110 @@
-// script.js
+// script.js (PHIÊN BẢN THIỆP CÓ BÌA HỒNG VÀ HIỆU ỨNG MỞ)
 
-// 1. Lấy các phần tử (elements) từ HTML
-const envelope = document.getElementById('envelope');
-const card = document.getElementById('card');
+// 1. Lấy các phần tử
+const particleBackground = document.getElementById('particle-background');
+const animationContainer = document.getElementById('animation-container');
+const messageDisplay = document.getElementById('message-display');
+const sentMessageElement = document.getElementById('sent-message');
+const sentImageElement = document.getElementById('sent-image');
+const thankYouMessageElement = document.getElementById('thank-you-message');
+const inputArea = document.getElementById('input-area');
+const personalMessageInput = document.getElementById('personal-message');
+const imageUploadInput = document.getElementById('image-upload');
 const sendButton = document.getElementById('send-button');
-const effectsContainer = document.getElementById('effects-container');
+const errorMessage = document.getElementById('error-message');
 
-// 2. Xử lý sự kiện MỞ THIỆP
-envelope.addEventListener('click', () => {
-    // Thêm class 'open' để kích hoạt animation CSS
-    envelope.classList.add('open');
-    card.classList.add('open');
-});
 
-// 3. Xử lý sự kiện GỬI LỜI CHÚC (Hiệu ứng VÀ Hiển thị lời chúc)
-sendButton.addEventListener('click', () => {
-    // Lấy phần tử textarea
-    const personalMessageInput = document.getElementById('personal-message');
-
-    // Lấy lời chúc từ textarea
-    const message = personalMessageInput.value;
-
-    // --- PHẦN CẬP NHẬT ---
-
-    // 1. Kiểm tra xem người dùng đã viết gì chưa
-    if (message.trim() === "") {
-        alert("Bạn ơi, hãy viết một lời chúc nhé!");
-        return; // Dừng lại, không làm gì cả
-    }
-
-    // 2. Tạo một phần tử mới để hiển thị lời chúc
-    const messageElement = document.createElement('blockquote');
-    messageElement.classList.add('sent-message'); // Thêm class 'sent-message'
-
-    // Gán nội dung lời chúc vào (dùng textContent để an toàn)
-    messageElement.textContent = `"${message}"`;
-
-    // 3. Lấy cha của nút "Gửi" (là div.card-content)
-    const cardContent = sendButton.parentElement;
-
-    // 4. Thêm lời chúc vào thiệp (chèn vào trước nút Gửi)
-    cardContent.insertBefore(messageElement, sendButton);
-
-    // 5. Ẩn textarea và nút "Gửi" đi
-    personalMessageInput.style.display = 'none';
-    sendButton.style.display = 'none';
-
-    // 6. (Tùy chọn) Thêm một lời cảm ơn
-    const thankYou = document.createElement('p');
-    thankYou.classList.add('thank-you-message');
-    thankYou.textContent = "Đã gửi lời chúc!";
-    cardContent.appendChild(thankYou);
-
-    // --- KẾT THÚC PHẦN CẬP NHẬT ---
-
-    // 7. Kích hoạt hiệu ứng! (Giữ nguyên như cũ)
-    createParticles();
-});
-
-// 4. Hàm tạo hiệu ứng
+// 2. Hàm tạo hạt sao nền (Giữ nguyên)
 function createParticles() {
-    // Tạo 30 hạt hiệu ứng
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 80; i++) {
         const particle = document.createElement('div');
         particle.classList.add('particle');
-
-        // --- Tạo sự ngẫu nhiên ---
-
-        // Vị trí chiều ngang (từ 0% đến 100% màn hình)
-        particle.style.left = `${Math.random() * 100}vw`;
-
-        // Kích thước (từ 5px đến 15px)
-        const size = Math.random() * 10 + 5;
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-
-        // Màu sắc (ngẫu nhiên trong các màu ấm)
-        const colors = ['#e74c3c', '#f7a072', '#f9c0aa', '#fdeeee', '#f1c40f'];
-        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-
-        // Tốc độ (thời gian bay từ 3s đến 6s)
-        const duration = Math.random() * 3 + 3;
-        particle.style.animationDuration = `${duration}s`;
-
-        // Độ trễ (để chúng không bay lên cùng lúc)
-        const delay = Math.random() * 1;
-        particle.style.animationDelay = `${delay}s`;
-
-        // Biến CSS để animation 'fly-up' di chuyển ngẫu nhiên
-        particle.style.setProperty('--random-x', `${(Math.random() - 0.5) * 200}px`);
-
-        // Thêm hạt vào container
-        effectsContainer.appendChild(particle);
-
-        // Tự động xóa hạt khỏi DOM sau khi bay xong
-        // (Thời gian animation + độ trễ + 1s dự phòng)
-        setTimeout(() => {
-            particle.remove();
-        }, (duration + delay + 1) * 1000);
+        particle.style.width = `${Math.random() * 3 + 1}px`;
+        particle.style.height = particle.style.width;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 5}s`;
+        particle.style.animationDuration = `${Math.random() * 30 + 30}s`;
+        particle.style.animationDelay = `${Math.random() * -60}s`;
+        particleBackground.appendChild(particle);
     }
 }
+
+
+// 3. Hàm kích hoạt khi trang tải xong
+function startScene() {
+    createParticles();
+    inputArea.classList.add('show');
+}
+
+
+// 4. XỬ LÝ SỰ KIỆN GỬI LỜI CHÚC (Giữ nguyên)
+sendButton.addEventListener('click', () => {
+    const message = personalMessageInput.value;
+    const file = imageUploadInput.files[0];
+
+    if (message.trim() === "") {
+        errorMessage.textContent = "Bạn ơi, hãy viết một lời chúc nhé!";
+        errorMessage.classList.add('show');
+        inputArea.style.animation = "shake 0.3s";
+        setTimeout(() => {
+            inputArea.style.animation = "";
+        }, 300);
+        return;
+    }
+
+    errorMessage.classList.remove('show');
+    sentMessageElement.textContent = `"${message}"`;
+    thankYouMessageElement.textContent = "Lời chúc của bạn đã được gửi đi!";
+
+    inputArea.classList.remove('show');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            sentImageElement.src = e.target.result;
+            sentImageElement.classList.add('has-image');
+            showCardAndAnimations();
+        }
+        reader.readAsDataURL(file);
+    } else {
+        sentImageElement.src = '';
+        sentImageElement.classList.remove('has-image');
+        showCardAndAnimations();
+    }
+});
+
+// 5. HÀM HIỆN THIỆP VÀ ANIMATION (Giữ nguyên)
+function showCardAndAnimations() {
+    setTimeout(() => {
+        messageDisplay.classList.add('show');
+    }, 800);
+    createEndlessAnimations(10, 10);
+}
+
+
+// 6. Hàm tạo các vật thể bay (Giữ nguyên)
+function createEndlessAnimations(planeCount, balloonCount) {
+    for (let i = 0; i < balloonCount; i++) {
+        const balloon = document.createElement('div');
+        balloon.classList.add('balloon');
+        balloon.style.left = `${Math.random() * 90}%`;
+        balloon.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        balloon.style.animationDelay = `${Math.random() * -10}s`;
+        const colors = ['rgba(255,192,203,0.7)', 'rgba(173,216,230,0.7)', 'rgba(255,255,224,0.7)'];
+        balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+        animationContainer.appendChild(balloon);
+    }
+    for (let i = 0; i < planeCount; i++) {
+        const plane = document.createElement('div');
+        plane.classList.add('paper-airplane');
+        plane.style.top = `${Math.random() * 80}%`;
+        plane.style.animationDuration = `${Math.random() * 5 + 8}s`;
+        plane.style.animationDelay = `${Math.random() * -8}s`;
+        animationContainer.appendChild(plane);
+    }
+}
+
+
+// 7. Khởi tạo
+startScene();

@@ -3,33 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thiệp Chúc Mừng</title>
+    <title>Lời Chúc Bay Cao (Thiệp Có Bìa Hồng)</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div id="effects-container"></div>
+<div id="particle-background"></div>
 
-<div class="envelope-container" id="envelope">
-    <div class="envelope-flap"></div>
-    <div class="envelope-body"></div>
-    <div class="envelope-message">
-        <p>Bạn có một lời chúc!</p>
-        <em>(Nhấn để mở)</em>
-    </div>
+<div id="animation-container"></div>
+
+<div class="input-area" id="input-area">
+    <h3>Gửi gắm lời chúc của bạn...</h3>
+    <textarea id="personal-message" placeholder="Viết lời chúc của bạn tại đây..."></textarea>
+
+    <input type="file" id="image-upload" accept="image/*">
+    <label for="image-upload" class="upload-button">Chọn Ảnh (Tùy chọn)</label>
+
+    <small id="error-message" class="error-text"></small>
+    <button id="send-button">Gửi Lời Chúc</button>
 </div>
 
-<div class="card-container" id="card">
-    <div class="card-content">
-        <h3>Gửi Thầy Cô,</h3>
+<div class="message-display-card" id="message-display">
+    <div class="card-cover card-cover-left">
+        <span class="card-cover-text">Lời Chúc Của Bạn</span>
+    </div>
+    <div class="card-cover card-cover-right"></div>
 
-        <img src="httpsT://via.placeholder.com/300x150?text=Ảnh+minh+họa+Thầy/Cô" alt="Ảnh thầy cô" class="teacher-img">
-
-        <p>Nhân ngày 20/11, em/con xin gửi lời chúc tốt đẹp nhất đến thầy/cô. Chúc thầy/cô luôn mạnh khỏe, hạnh phúc và thành công trong sự nghiệp trồng người!</p>
-
-        <textarea id="personal-message" placeholder="Viết lời chúc cá nhân của bạn vào đây..."></textarea>
-
-        <button id="send-button">Gửi Lời Chúc</button>
+    <div class="card-content-wrapper">
+        <div class="card-left">
+            <div class="card-text-content">
+                <blockquote id="sent-message"></blockquote>
+                <p id="thank-you-message"></p>
+            </div>
+        </div>
+        <div class="card-right">
+            <img id="sent-image" src="" alt="Ảnh lời chúc">
+        </div>
     </div>
 </div>
 

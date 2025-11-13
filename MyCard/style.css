@@ -1,190 +1,375 @@
-/* style.css */
+/* style.css (PHIÊN BẢN THIỆP CÓ BÌA HỒNG VÀ HIỆU ỨNG MỞ) */
+
+:root {
+    --bg-dark: #121212;
+    --particle-color: #b3e0ff;
+    --glow-color: #81e6fc;
+
+    --card-bg: #fdfdfd;
+    --card-text-color: #333;
+    --card-accent-color: #e0b0ff; /* Màu nhấn nhẹ nhàng */
+    --card-thank-you-color: #888;
+
+    --card-cover-color: #ff99bb; /* MÀU HỒNG CỦA BÌA THIỆP */
+    --card-cover-stripe: #ffcce0; /* Dải màu trên bìa */
+}
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Open Sans', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #fdeeee; /* Màu hồng nhạt ấm */
-    overflow: hidden; /* Ngăn scroll khi hiệu ứng bay */
+    background-color: var(--bg-dark);
+    color: #f0f0f0;
+    overflow: hidden;
+    margin: 0;
 }
 
-/* --- 1. Phong bì --- */
-.envelope-container {
-    position: relative;
-    width: 300px;
-    height: 200px;
-    background: #f7a072; /* Màu vàng cam */
-    cursor: pointer;
-    transition: all 0.5s ease-in-out;
-    z-index: 10;
-}
-
-.envelope-body {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    background: #f7a072;
-    border-top: 100px solid transparent;
-    border-left: 150px solid #f9c0aa; /* Màu nhạt hơn */
-    border-right: 150px solid #f9c0aa;
-}
-
-.envelope-flap {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100px; /* Nửa chiều cao phong bì */
-    background: #f7a072;
-    transform-origin: bottom;
-    transition: transform 0.5s ease-in-out;
-    /* Tạo hình tam giác cho nắp */
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    z-index: 12;
-}
-
-.envelope-message {
-    position: absolute;
-    width: 100%;
-    text-align: center;
-    top: 60px;
-    color: white;
-    z-index: 11;
-}
-.envelope-message em {
-    font-size: 0.8rem;
-}
-
-/* --- 2. Tấm thiệp --- */
-.card-container {
-    position: absolute;
-    width: 450px;
-    max-width: 90vw;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    padding: 30px;
-    text-align: center;
-
-    /* Ban đầu ẩn đi và ở dưới */
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(200px) rotate(5deg);
-    transition: all 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    z-index: 5;
-}
-
-.card-content .teacher-img {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.card-content textarea {
-    width: 100%;
-    min-height: 80px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin-top: 15px;
-    box-sizing: border-box; /* Quan trọng */
-}
-
-.card-content button {
-    background: #e74c3c; /* Màu đỏ ấm */
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 50px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-content button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
-}
-
-/* --- 3. Trạng thái "Mở" (Thêm bằng JavaScript) --- */
-
-/* Khi phong bì được "mở" */
-.envelope-container.open .envelope-flap {
-    transform: rotateX(180deg); /* Lật nắp lên */
-}
-.envelope-container.open {
-    /* Đẩy phong bì xuống và mờ đi */
-    transform: translateY(150px);
-    opacity: 0;
-    z-index: 1; /* Cho ra sau tấm thiệp */
-}
-
-/* Khi thiệp được "mở" */
-.card-container.open {
-    visibility: visible;
-    opacity: 1;
-    transform: translateY(0) rotate(0deg); /* Bay lên và xoay về 0 */
-    z-index: 20;
-}
-
-/* --- 4. CSS Cho Hiệu ứng Bay --- */
-#effects-container {
+/* --- NỀN SAO VÀ ANIMATION (Giữ nguyên) --- */
+#particle-background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* Cho phép nhấn xuyên qua */
-    z-index: 999;
+    pointer-events: none;
+    z-index: 0;
+    animation: bg-pan 40s ease-in-out infinite alternate;
 }
-
-/* Định nghĩa 1 hạt (bong bóng/hoa) */
+@keyframes bg-pan {
+    0% { background-color: #121212; }
+    50% { background-color: #1a1a2e; }
+    100% { background-color: #121212; }
+}
 .particle {
     position: absolute;
-    bottom: -20px; /* Xuất phát từ dưới */
+    background: var(--particle-color);
     border-radius: 50%;
     opacity: 0;
-    animation: fly-up 5s ease-in-out forwards;
+    animation:
+            twinkle 5s infinite ease-in-out,
+            drift 60s infinite linear;
+}
+@keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1); }
+}
+@keyframes drift {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-100px); }
 }
 
-/* Animation bay lên */
-@keyframes fly-up {
-    0% {
-        bottom: -20px;
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-    100% {
-        bottom: 110vh; /* Bay ra khỏi màn hình */
-        opacity: 0;
-        /* Bay ngẫu nhiên sang 2 bên */
-        transform: translateX(var(--random-x, 0)) scale(0.5);
-    }
+/* --- KHU VỰC NHẬP LIỆU (Giữ nguyên) --- */
+.input-area {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(129, 230, 252, 0.3);
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    z-index: 10;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+    pointer-events: none;
 }
-
-/* Định dạng cho lời chúc sau khi "gửi".
-  Chúng ta dùng blockquote để trông như một lời trích dẫn.
-*/
-.sent-message {
-    font-style: italic;
-    font-size: 1.1rem;
-    color: #333;
-    background: #fef9e7; /* Màu giấy vàng nhạt */
-    padding: 15px;
+.input-area.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+.input-area h3 {
+    color: #e0f7fa;
+    margin-bottom: 20px;
+}
+.input-area textarea {
+    width: calc(100% - 20px);
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid var(--glow-color);
     border-radius: 5px;
-    border-left: 5px solid #f7a072; /* Màu cam ấm giống phong bì */
-    margin-top: 15px;
-    text-align: left; /* Căn lề trái cho dễ đọc */
-    white-space: pre-wrap; /* Giữ lại các lần xuống dòng của người dùng */
+    background: rgba(255, 255, 255, 0.05);
+    color: #f0f0f0;
+    font-size: 1rem;
+    resize: none;
+}
+#image-upload {
+    display: none;
+}
+.upload-button {
+    display: block;
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 0 auto 15px auto;
+    background: rgba(255, 255, 255, 0.2);
+    color: #e0f7fa;
+    border: 1px dashed var(--glow-color);
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+.upload-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-style: solid;
+}
+.input-area button#send-button {
+    background: linear-gradient(45deg, #81e6fc, #a8dff5);
+    color: var(--bg-dark);
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(129, 230, 252, 0.5);
+    transition: all 0.3s ease;
+    width: 100%;
+}
+.error-text {
+    color: #ff6e6e;
+    font-size: 0.9rem;
+    height: 1.2em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: block;
+    margin-top: 5px;
+}
+.error-text.show {
+    opacity: 1;
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
 }
 
-/* Thêm một lời cảm ơn nhỏ */
-.thank-you-message {
-    font-weight: bold;
-    color: #e74c3c;
-    margin-top: 20px;
+/* --- TẤM THIỆP NÂNG CẤP HOÀN CHỈNH (CÓ BÌA MỞ) --- */
+.message-display-card {
+    position: absolute;
+    width: 90%;
+    max-width: 750px;
+    min-height: 400px;
+    background: var(--card-bg); /* Nền bên trong thiệp */
+    border-radius: 15px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    z-index: 15;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+    /* Hiệu ứng 3D */
+    perspective: 1500px; /* Tăng perspective */
+    transform-style: preserve-3d;
+
+    opacity: 0;
+    transform: translateY(50px) scale(0.8); /* Bắt đầu nhỏ và ẩn */
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* Chỉ cho thiệp xuất hiện */
+    pointer-events: none;
+}
+.message-display-card.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+/* --- BÌA THIỆP --- */
+.card-cover {
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background: var(--card-cover-color); /* Màu hồng của bìa */
+    transform-origin: left center; /* Gốc xoay cho bìa trái */
+    z-index: 20; /* Nằm trên nội dung thiệp */
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.card-cover-left {
+    left: 0;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    /* Dải màu trang trí */
+    border-right: 5px solid var(--card-cover-stripe);
+    background: linear-gradient(135deg, var(--card-cover-color) 70%, var(--card-cover-stripe) 100%);
+}
+.card-cover-right {
+    right: 0;
+    transform-origin: right center; /* Gốc xoay cho bìa phải */
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+    /* Dải màu trang trí */
+    border-left: 5px solid var(--card-cover-stripe);
+    background: linear-gradient(45deg, var(--card-cover-color) 70%, var(--card-cover-stripe) 100%);
+}
+
+.card-cover-text {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    color: #fff;
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    /* Để chữ nằm giữa bìa trái */
+    position: relative;
+    right: 15%; /* Dịch sang trái một chút để nằm ở giữa bìa */
+}
+
+
+/* ANIMATION MỞ BÌA THIỆP */
+.message-display-card.show .card-cover-left {
+    animation: open-card-cover-left 1.5s ease-out 1s forwards; /* Chạy sau khi thiệp hiện */
+}
+.message-display-card.show .card-cover-right {
+    animation: open-card-cover-right 1.5s ease-out 1s forwards; /* Chạy sau khi thiệp hiện */
+}
+
+@keyframes open-card-cover-left {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(-170deg); } /* Mở gần hết */
+}
+@keyframes open-card-cover-right {
+    0% { transform: rotateY(0deg); }
+    100% { transform: rotateY(170deg); } /* Mở gần hết */
+}
+
+/* Ẩn chữ trên bìa khi thiệp mở ra */
+.message-display-card.show .card-cover-text {
+    opacity: 0;
+    transition: opacity 0.5s ease 1.5s; /* Mờ dần */
+}
+
+
+/* --- NỘI DUNG BÊN TRONG THIỆP --- */
+.card-content-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 10; /* Nằm dưới bìa, trên background */
+    background: var(--card-bg); /* Nền chính của nội dung */
+    border-radius: 15px;
+}
+
+.card-left {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    color: var(--card-text-color);
+}
+
+.card-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+#sent-image {
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+
+    transform: rotate(5deg) scale(0.95);
+    transition: transform 0.5s ease;
+    opacity: 0; /* Ban đầu ẩn */
+    transition: opacity 0.8s ease 2s; /* Hiện sau khi bìa mở */
+}
+.message-display-card.show #sent-image.has-image {
+    opacity: 1; /* Hiện ảnh nếu có */
+}
+
+#sent-message {
+    font-family: 'Dancing Script', cursive;
+    font-style: normal;
+    font-size: 2.2rem;
+    color: #111;
+    margin: 0 0 25px 0;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.8s ease 2.2s; /* Hiện sau lời cảm ơn */
+}
+.message-display-card.show #sent-message {
+    opacity: 1;
+}
+
+#thank-you-message {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: var(--card-thank-you-color);
+    opacity: 0;
+    transition: opacity 0.8s ease 2.5s; /* Hiện sau lời chúc */
+}
+.message-display-card.show #thank-you-message {
+    opacity: 1;
+}
+
+
+/* --- ANIMATION MÁY BAY, BONG BÓNG (Giữ nguyên) --- */
+#animation-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+.balloon {
+    position: absolute;
+    width: 50px;
+    height: 65px;
+    background: rgba(255, 192, 203, 0.7);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    opacity: 0.7;
+    animation: float-up 15s linear infinite;
+}
+.balloon::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 1px;
+    height: 30px;
+    background: #fff;
+    transform: translateX(-50%);
+}
+@keyframes float-up {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0.8; }
+    100% { transform: translateY(-100px) rotate(15deg); opacity: 0.2; }
+}
+.paper-airplane {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: #f0f0f0;
+    clip-path: polygon(0% 0%, 100% 50%, 0% 100%, 30% 50%);
+    opacity: 0.8;
+    animation: fly-across 10s linear infinite;
+}
+@keyframes fly-across {
+    0% { transform: translateX(-100px) translateY(0vh) rotate(0deg); opacity: 0; }
+    20% { opacity: 0.8; }
+    80% { opacity: 0.8; }
+    100% { transform: translateX(100vw) translateY(-20vh) rotate(10deg); opacity: 0; }
 }
